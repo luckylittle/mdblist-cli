@@ -1,12 +1,21 @@
-export MDBLIST_API_KEY="your_actual_api_key_here"
+# mdblist-cli
 
-go mod tidy
+## Add your MDBList API key
 
-# Get help
-go run . --help
+`export MDBLIST_API_KEY="your_actual_api_key_here"`
 
-# Get your API limits
-go run . get my-limits
+## Install dependencies
 
-# Get your lists
-go run . get my-lists
+`go mod tidy`
+
+## Get help
+
+`go run . --help`
+
+## Get your API limits
+
+`go run . get my-limits`
+
+## Get your lists
+
+`go run . get my-lists`

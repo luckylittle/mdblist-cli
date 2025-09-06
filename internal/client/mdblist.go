@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	apiBaseURL = "https://mdblist.com/api"
+	apiBaseURL = "https://api.mdblist.com"
 )
 
 // Client holds the http client and api key for making requests to MDBList API.
@@ -30,20 +30,22 @@ func New(apiKey string) (*Client, error) {
 
 // GetMyLimits fetches the current user's API limits.
 func (c *Client) GetMyLimits() (interface{}, error) {
-	return c.doRequest("/my/limits")
+	return c.doRequest("/user")
 }
 
 // GetMyLists fetches the current user's lists.
 func (c *Client) GetMyLists() (interface{}, error) {
-	return c.doRequest("/my/lists")
+	return c.doRequest("/lists/user")
 }
 
 func (c *Client) doRequest(endpoint string) (interface{}, error) {
-	req, err := http.NewRequest("GET", apiBaseURL+endpoint, nil)
+	url := fmt.Sprintf("%s%s?apikey=%s", apiBaseURL, endpoint, c.apiKey)
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
-	req.Header.Add("Authorization", "Bearer "+c.apiKey)
+	// The API key is now in the query parameters.
+	// req.Header.Add("Authorization", "Bearer "+c.apiKey)
 	req.Header.Add("Accept", "application/json")
 
 	resp, err := c.httpClient.Do(req)
