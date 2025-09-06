@@ -1,8 +1,10 @@
+// Maintainer: Lucian Maly <lmaly@redhat.com>
 package cmd
 
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +23,7 @@ var getMyLimitsCmd = &cobra.Command{
 			fmt.Println("Error:", err)
 			return
 		}
-		printJSON(limits)
+		printData(limits)
 	},
 }
 
@@ -34,7 +36,7 @@ var getMyListsCmd = &cobra.Command{
 			fmt.Println("Error:", err)
 			return
 		}
-		printJSON(lists)
+		printData(lists)
 	},
 }
 
@@ -65,7 +67,7 @@ var getUserListsCmd = &cobra.Command{
 			fmt.Println("Error:", err)
 			return
 		}
-		printJSON(lists)
+		printData(lists)
 	},
 }
 
@@ -97,7 +99,7 @@ var getListCmd = &cobra.Command{
 			fmt.Println("Error:", err)
 			return
 		}
-		printJSON(list)
+		printData(list)
 	},
 }
 
@@ -119,8 +121,7 @@ var getListItemsCmd = &cobra.Command{
 			err   error
 		)
 
-		// For this command, we'll just use an empty params for now.
-		// You could extend this to take CLI flags for pagination, sorting, etc.
+		// TODO: extend this to take CLI flags for pagination, sorting, etc.
 		params := url.Values{}
 
 		if listID != 0 {
@@ -133,7 +134,94 @@ var getListItemsCmd = &cobra.Command{
 			fmt.Println("Error:", err)
 			return
 		}
-		printJSON(items)
+		printData(items)
+	},
+}
+
+var getListChangesCmd = &cobra.Command{
+	Use:   "list-changes <list-id>",
+	Short: "Fetch changes for a list by its ID",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		listID, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Println("Error: invalid list ID provided")
+			return
+		}
+
+		changes, err := apiClient.GetListChanges(listID)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		printData(changes)
+	},
+}
+
+var getMediaInfoCmd = &cobra.Command{
+	Use:   "media-info <provider> <media-type> <media-id>",
+	Short: "Fetch information about a media item",
+	Args:  cobra.ExactArgs(3),
+	Run: func(cmd *cobra.Command, args []string) {
+		provider, mediaType, mediaID := args[0], args[1], args[2]
+
+		// Example of how you could add optional params via flags
+		// For now, it's empty.
+		params := url.Values{}
+
+		info, err := apiClient.GetMediaInfo(provider, mediaType, mediaID, params)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		printData(info)
+	},
+}
+
+var getTopListsCmd = &cobra.Command{
+	Use:   "top-lists",
+	Short: "Fetch the top lists",
+	Run: func(cmd *cobra.Command, args []string) {
+		lists, err := apiClient.GetTopLists()
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		printData(lists)
+	},
+}
+
+var getLastActivitiesCmd = &cobra.Command{
+	Use:   "last-activities",
+	Short: "Fetch the last activity timestamps for sync",
+	Run: func(cmd *cobra.Command, args []string) {
+		activities, err := apiClient.GetLastActivities()
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		printData(activities)
+	},
+}
+
+var getWatchlistItemsCmd = &cobra.Command{
+	Use:   "watchlist-items",
+	Short: "Fetch items from the user's watchlist",
+	Run: func(cmd *cobra.Command, args []string) {
+		// Example of how you could add optional params via flags
+		// For now, it's empty.
+		params := url.Values{}
+		sort, _ := cmd.Flags().GetString("sort")
+		if sort != "" {
+			params.Set("sort", sort)
+		}
+
+		items, err := apiClient.GetWatchlistItems(params)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		printData(items)
 	},
 }
 
@@ -144,6 +232,11 @@ func init() {
 	getCmd.AddCommand(getUserListsCmd)
 	getCmd.AddCommand(getListCmd)
 	getCmd.AddCommand(getListItemsCmd)
+	getCmd.AddCommand(getListChangesCmd)
+	getCmd.AddCommand(getMediaInfoCmd)
+	getCmd.AddCommand(getTopListsCmd)
+	getCmd.AddCommand(getLastActivitiesCmd)
+	getCmd.AddCommand(getWatchlistItemsCmd)
 
 	getUserListsCmd.Flags().Int("id", 0, "User ID")
 	getUserListsCmd.Flags().String("username", "", "Username")
@@ -155,4 +248,6 @@ func init() {
 	getListItemsCmd.Flags().Int("id", 0, "List ID")
 	getListItemsCmd.Flags().String("username", "", "Username of the list owner")
 	getListItemsCmd.Flags().String("listname", "", "Name/slug of the list")
+
+	getWatchlistItemsCmd.Flags().String("sort", "", "Sort order (e.g., 'added_at.desc')")
 }

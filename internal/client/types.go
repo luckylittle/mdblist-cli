@@ -1,3 +1,4 @@
+// Maintainer: Lucian Maly <lmaly@redhat.com>
 package client
 
 import (
@@ -90,7 +91,7 @@ type MediaInfo struct {
 	Ratings []struct {
 		Source string      `json:"source"`
 		Value  interface{} `json:"value"` // Can be int or float
-		Score  *int        `json:"score"`
+		Score  *float64    `json:"score"`
 		Votes  *int        `json:"votes"`
 		URL    interface{} `json:"url"` // Can be int or string
 	} `json:"ratings"`
