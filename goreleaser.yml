@@ -8,8 +8,6 @@ builds:
   - id: mdblist-cli
     env:
       - CGO_ENABLED=0
-    flags:
-      - -pgo=cpu.pprof
     goos:
       - linux
       - windows
@@ -36,12 +34,12 @@ builds:
     binary: mdblist-cli
 
 archives:
-  - id: mdblist-cli
+  - ids: [mdblist-cli]
     builds:
       - mdblist-cli
     format_overrides:
-      - goos: windows
-        format: zip
+      - formats: ['zip']
+        goos: windows
     name_template: >-
       {{ .ProjectName }}_
       {{- .Version }}_
