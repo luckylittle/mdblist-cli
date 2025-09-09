@@ -11,12 +11,12 @@ import (
 
 var getCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Get resources from MDBList",
+	Short: "Get resources from MDBList.",
 }
 
 var getMyLimitsCmd = &cobra.Command{
 	Use:   "my-limits",
-	Short: "Get information about your API limits",
+	Short: "Show information about user limits.",
 	Run: func(cmd *cobra.Command, args []string) {
 		limits, err := apiClient.GetMyLimits()
 		if err != nil {
@@ -29,7 +29,7 @@ var getMyLimitsCmd = &cobra.Command{
 
 var getMyListsCmd = &cobra.Command{
 	Use:   "my-lists",
-	Short: "Fetch your lists",
+	Short: "Fetches users lists.",
 	Run: func(cmd *cobra.Command, args []string) {
 		lists, err := apiClient.GetMyLists()
 		if err != nil {
@@ -42,13 +42,13 @@ var getMyListsCmd = &cobra.Command{
 
 var getUserListsCmd = &cobra.Command{
 	Use:   "user-lists",
-	Short: "Fetch a user's lists by ID or username",
+	Short: "Fetch a user's lists.",
 	Run: func(cmd *cobra.Command, args []string) {
 		userID, _ := cmd.Flags().GetInt("id")
 		username, _ := cmd.Flags().GetString("username")
 
 		if userID == 0 && username == "" {
-			fmt.Println("Error: either --id or --username is required")
+			fmt.Println("Error: either user's --id or --username is required!")
 			return
 		}
 
@@ -73,14 +73,14 @@ var getUserListsCmd = &cobra.Command{
 
 var getListCmd = &cobra.Command{
 	Use:   "list",
-	Short: "Fetch a specific list by ID or by username and list name",
+	Short: "Retrieves details of a list.",
 	Run: func(cmd *cobra.Command, args []string) {
 		listID, _ := cmd.Flags().GetInt("id")
 		username, _ := cmd.Flags().GetString("username")
 		listName, _ := cmd.Flags().GetString("listname")
 
 		if listID == 0 && (username == "" || listName == "") {
-			fmt.Println("Error: either --id or both --username and --listname are required")
+			fmt.Println("Error: either --id or both --username and --listname are required!")
 			return
 		}
 
@@ -105,14 +105,14 @@ var getListCmd = &cobra.Command{
 
 var getListItemsCmd = &cobra.Command{
 	Use:   "list-items",
-	Short: "Fetch items from a list by ID or by username and list name",
+	Short: "Fetches items from a specified list.",
 	Run: func(cmd *cobra.Command, args []string) {
 		listID, _ := cmd.Flags().GetInt("id")
 		username, _ := cmd.Flags().GetString("username")
 		listName, _ := cmd.Flags().GetString("listname")
 
 		if listID == 0 && (username == "" || listName == "") {
-			fmt.Println("Error: either --id or both --username and --listname are required")
+			fmt.Println("Error: either --id or both --username and --listname are required!")
 			return
 		}
 
@@ -140,12 +140,12 @@ var getListItemsCmd = &cobra.Command{
 
 var getListChangesCmd = &cobra.Command{
 	Use:   "list-changes <list-id>",
-	Short: "Fetch changes for a list by its ID",
+	Short: "Returns Trakt IDs for items changed after the last list update.",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		listID, err := strconv.Atoi(args[0])
 		if err != nil {
-			fmt.Println("Error: invalid list ID provided")
+			fmt.Println("Error: invalid list ID provided!")
 			return
 		}
 
@@ -180,7 +180,7 @@ var getMediaInfoCmd = &cobra.Command{
 
 var getTopListsCmd = &cobra.Command{
 	Use:   "top-lists",
-	Short: "Fetch the top lists",
+	Short: "Outputs the top lists sorted by Trakt likes.",
 	Run: func(cmd *cobra.Command, args []string) {
 		lists, err := apiClient.GetTopLists()
 		if err != nil {
@@ -193,7 +193,7 @@ var getTopListsCmd = &cobra.Command{
 
 var getLastActivitiesCmd = &cobra.Command{
 	Use:   "last-activities",
-	Short: "Fetch the last activity timestamps for sync",
+	Short: "Fetch the last activity timestamps for sync.",
 	Run: func(cmd *cobra.Command, args []string) {
 		activities, err := apiClient.GetLastActivities()
 		if err != nil {
@@ -206,10 +206,8 @@ var getLastActivitiesCmd = &cobra.Command{
 
 var getWatchlistItemsCmd = &cobra.Command{
 	Use:   "watchlist-items",
-	Short: "Fetch items from the user's watchlist",
+	Short: "Fetches watchlist items, they are sorted by date added.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// Example of how you could add optional params via flags
-		// For now, it's empty.
 		params := url.Values{}
 		sort, _ := cmd.Flags().GetString("sort")
 		if sort != "" {
