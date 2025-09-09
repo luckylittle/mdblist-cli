@@ -56,6 +56,15 @@ func printJSON(data interface{}) {
 	fmt.Println(string(b))
 }
 
+func printYAML(data interface{}) {
+	b, err := yaml.Marshal(data)
+	if err != nil {
+		fmt.Println("Error formatting YAML:", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
 func printData(data interface{}) {
 	switch output {
 	case "json":
@@ -65,13 +74,4 @@ func printData(data interface{}) {
 	default:
 		fmt.Printf("Error: unknown output format %q\n", output)
 	}
-}
-
-func printYAML(data interface{}) {
-	b, err := yaml.Marshal(data)
-	if err != nil {
-		fmt.Println("Error formatting YAML:", err)
-		return
-	}
-	fmt.Println(string(b))
 }

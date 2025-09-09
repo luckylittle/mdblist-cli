@@ -1,7 +1,7 @@
 # mdblist-cli
 
 [![GitHub license](https://img.shields.io/github/license/luckylittle/mdblist-cli.svg)](https://github.com/luckylittle/mdblist-cli/blob/master/LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)](https://github.com/luckylittle/mdblist-cli/releases)
+[![Version](https://img.shields.io/badge/Version-0.0.6-green.svg)](https://github.com/luckylittle/mdblist-cli/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/luckylittle/mdblist-cli)](https://goreportcard.com/report/github.com/luckylittle/mdblist-cli)
 
 ## Overview
@@ -12,7 +12,7 @@
 
 ### About `mdblist-cli`
 
-The idea is to perform basic MDBList operations directly from your command line, regardless of what OS you use. This Golang project leverages it's [native API](https://api.mdblist.com/) - the API documentation is located here: [Apiary](https://mdblist.docs.apiary.io/).
+The idea is to perform basic MDBList operations directly from your command line, regardless of what OS you use. This Golang project leverages it's [native API](https://api.mdblist.com/) - the API documentation is located on [Apiary](https://mdblist.docs.apiary.io/).
 
 ## Download
 
@@ -20,13 +20,15 @@ See the latest [release](https://github.com/luckylittle/mdblist-cli/releases/). 
 
 ## Usage
 
-* Set up the API key environment variable in your Shell:
+* :warning: Set up the API key environment variable in your Shell first :warning:
 
 ```bash
 export MDBLIST_API_KEY=abcdefghijklmnopqrstuvwxy
 ```
 
-* Help - No arguments
+* No arguments - available commands
+
+<details>
 
 ```bash
 $ ./mdblist-cli
@@ -40,7 +42,7 @@ Available Commands:
   get         Get resources from MDBList
   help        Help about any command
   search      Search resources in MDBList
-  update      Update resources on MDBList
+  update      Update resources in MDBList
 
 Flags:
   -h, --help            help for mdblist-cli
@@ -49,26 +51,30 @@ Flags:
 Use "mdblist-cli [command] --help" for more information about a command.
 ```
 
+</details>
+
 * Help - Get
+
+<details>
 
 ```bash
 $ ./mdblist-cli get --help
-Get resources from MDBList
+Get resources from MDBList.
 
 Usage:
   mdblist-cli get [command]
 
 Available Commands:
-  last-activities Fetch the last activity timestamps for sync
-  list            Fetch a specific list by ID or by username and list name
-  list-changes    Fetch changes for a list by its ID
-  list-items      Fetch items from a list by ID or by username and list name
+  last-activities Fetch the last activity timestamps for sync.
+  list            Retrieves details of a list.
+  list-changes    Returns Trakt IDs for items changed after the last list update.
+  list-items      Fetches items from a specified list.
   media-info      Fetch information about a media item
-  my-limits       Get information about your API limits
-  my-lists        Fetch your lists
-  top-lists       Fetch the top lists
-  user-lists      Fetch a user's lists by ID or username
-  watchlist-items Fetch items from the user's watchlist
+  my-limits       Show information about user limits.
+  my-lists        Fetches users lists.
+  top-lists       Outputs the top lists sorted by Trakt likes.
+  user-lists      Fetch a user's lists.
+  watchlist-items Fetches watchlist items, they are sorted by date added.
 
 Flags:
   -h, --help   help for get
@@ -79,18 +85,22 @@ Global Flags:
 Use "mdblist-cli get [command] --help" for more information about a command.
 ```
 
+</details>
+
 * Help - Search
+
+<details>
 
 ```bash
 $ ./mdblist-cli search --help
-Search resources in MDBList
+Search resources in MDBList.
 
 Usage:
   mdblist-cli search [command]
 
 Available Commands:
-  lists Search for public lists
-  media Search for media
+  lists       Search public lists by title.
+  media       Search for movie, show or both (any).
 
 Flags:
   -h, --help   help for search
@@ -101,17 +111,22 @@ Global Flags:
 Use "mdblist-cli search [command] --help" for more information about a command.
 ```
 
+</details>
+
 * Help - Update
+
+<details>
 
 ```bash
 $ ./mdblist-cli update --help
-Update resources on MDBList
+Update resources in MDBList.
 
 Usage:
   mdblist-cli update [command]
 
 Available Commands:
-  list-name   Update a list's name by ID or by username and list name
+  list-items  You can modify static list by adding or removing items.
+  list-name   Updates the name of a list.
 
 Flags:
   -h, --help   help for update
@@ -122,9 +137,13 @@ Global Flags:
 Use "mdblist-cli update [command] --help" for more information about a command.
 ```
 
+</details>
+
 ## Examples
 
 * `mdblist-cli get my-limits` - Get information about the API key's limits
+
+<details>
 
 ```json
 {
@@ -136,7 +155,11 @@ Use "mdblist-cli update [command] --help" for more information about a command.
 }
 ```
 
+</details>
+
 * `mdblist-cli get top-lists` - Top lists **JSON** (omitted)
+
+<details>
 
 ```json
 [
@@ -155,7 +178,11 @@ Use "mdblist-cli update [command] --help" for more information about a command.
   ...
 ```
 
-* `mdblist-cli get top-lists --output=yaml` - Same as above, Top lists **YAML** (omitted)
+</details>
+
+* `mdblist-cli get top-lists --output=yaml` - Top lists again, but **YAML** (omitted)
+
+<details>
 
 ```yaml
 - id: 2194
@@ -172,7 +199,11 @@ Use "mdblist-cli update [command] --help" for more information about a command.
   ...
 ```
 
+</details>
+
 * `mdblist-cli get list --id 2194` - Specific list details
+
+<details>
 
 ```json
 [
@@ -191,7 +222,11 @@ Use "mdblist-cli update [command] --help" for more information about a command.
 ]
 ```
 
+</details>
+
 * `mdblist-cli get list-items --username garycrawfordgc --listname "latest-tv-shows"` - Get items from the list (omitted)
+
+<details>
 
 ```json
 {
@@ -212,7 +247,11 @@ Use "mdblist-cli update [command] --help" for more information about a command.
     ...
 ```
 
-* `mdblist-cli get media-info imdb show tt32159809 --output=yaml` - Get details about the media
+</details>
+
+* `mdblist-cli get media-info imdb show tt32159809 --output=yaml` - Get details about the media, **YAML** (omitted)
+
+<details>
 
 ```yaml
 title: The Paper
@@ -239,7 +278,11 @@ ratings:
       ...
 ```
 
-* `mdblist-cli search media any -q "The Paper"` - Search query
+</details>
+
+* `mdblist-cli search media any -q "The Paper"` - Search query, first 100 items (omitted)
+
+<details>
 
 ```json
     ...
@@ -258,9 +301,60 @@ ratings:
       }
     }
   ],
-  "total": 40
+  "total": 100
 }
 ```
+
+</details>
+
+* `mdblist-cli update list-items -a add -i 113124 --movie-imdb tt26581740` - Add item to the static list
+
+<details>
+
+`List items updated successfully (action: add).`
+
+```json
+{
+  "added": {
+    "episodes": 0,
+    "movies": 1,
+    "seasons": 0,
+    "shows": 0
+  },
+  "existing": {
+    "episodes": 0,
+    "movies": 0,
+    "seasons": 0,
+    "shows": 0
+  },
+  "not_found": {
+    "episodes": 0,
+    "movies": 0,
+    "seasons": 0,
+    "shows": 0
+  }
+}
+```
+
+</details>
+
+* `mdblist-cli update list-items -a remove -i 113124 --movie-imdb tt26581740 --output yaml` - Remove item from the static list, **YAML**
+
+<details>
+
+`List items updated successfully (action: remove).`
+
+```yaml
+added: {}
+existing: {}
+notfound:
+    episodes: 0
+    movies: 0
+    seasons: 0
+    shows: 0
+```
+
+</details>
 
 ## Development
 
@@ -276,15 +370,15 @@ Tested with `go version go1.24.3 linux/amd64`.
 
 `go mod tidy`
 
-### Get help (test)
+### Get help (test before build)
 
 `go run . --help`
 
-### Get your API limits (test)
+### Get your API limits (test before build)
 
 `go run . get my-limits`
 
-### Get your lists (test)
+### Get your lists (test before build)
 
 `go run . get my-lists`
 
@@ -296,4 +390,4 @@ GNU General Public License
 
 Lucian Maly <<lmaly@redhat.com>>
 
-_Last update: Sat 06 Sep 2025 10:02:43 UTC_
+_Last update: Tue 09 Sep 2025 07:04:27 UTC_

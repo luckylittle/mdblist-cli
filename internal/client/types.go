@@ -3,6 +3,7 @@ package client
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 )
 
@@ -46,16 +47,18 @@ type ListItems struct {
 
 // ListItem represents a single movie or show in a list.
 type ListItem struct {
-	ID             int    `json:"id"`
-	Rank           int    `json:"rank"`
-	Adult          int    `json:"adult"`
-	Title          string `json:"title"`
-	ImdbID         string `json:"imdb_id"`
-	TvdbID         *int   `json:"tvdb_id"`
-	Language       string `json:"language"`
-	MediaType      string `json:"mediatype"`
-	ReleaseYear    int    `json:"release_year"`
-	SpokenLanguage string `json:"spoken_language"`
+	ID             int         `json:"id"`
+	Rank           int         `json:"rank"`
+	Adult          int         `json:"adult"`
+	Title          string      `json:"title"`
+	ImdbID         string      `json:"imdb_id"`
+	TvdbID         *int        `json:"tvdb_id"`
+	Language       string      `json:"language"`
+	MediaType      string      `json:"mediatype"`
+	ReleaseYear    int         `json:"release_year"`
+	SpokenLanguage string      `json:"spoken_language"`
+	Movies         []MediaItem `json:"movies,omitempty"`
+	Shows          []MediaItem `json:"shows,omitempty"`
 }
 
 // ListChanges represents the changes in a list.
@@ -115,6 +118,11 @@ type MediaInfo struct {
 	Backdrop       string    `json:"backdrop"`
 	Reviews        []Review  `json:"reviews,omitempty"`
 	Keywords       []Keyword `json:"keywords,omitempty"`
+}
+
+type MediaItem struct {
+	TMDb int    `json:"tmdb,omitempty"`
+	IMDb string `json:"imdb,omitempty"`
 }
 
 // Review represents a media review.
@@ -196,6 +204,12 @@ type ModifyListResponse struct {
 	} `json:"not_found"`
 }
 
+type ModifyListItemsResponse struct {
+	Added    map[string]int `json:"added"`
+	Existing map[string]int `json:"existing"`
+	NotFound map[string]int `json:"not_found"`
+}
+
 // LastActivities represents the last activity timestamps for sync purposes.
 type LastActivities struct {
 	WatchlistedAt time.Time `json:"watchlisted_at"`
@@ -224,4 +238,14 @@ type APIError struct {
 
 func (e *APIError) Error() string {
 	return fmt.Sprintf("API error (status %d): %s", e.StatusCode, e.Message)
+}
+
+func (c *Client) ModifyListItems(listID int, action string, items ModifyListRequest) (*ModifyListItemsResponse, error) {
+	endpoint := fmt.Sprintf("/lists/%d/items/%s", listID, action)
+	var response ModifyListItemsResponse
+	if err := c.doRequest(http.MethodPost, endpoint, nil, items, &response); err != nil {
+		return nil, err
+	}
+
+	return &response, nil
 }

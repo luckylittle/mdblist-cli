@@ -10,19 +10,19 @@ import (
 
 var searchCmd = &cobra.Command{
 	Use:   "search",
-	Short: "Search resources in MDBList",
+	Short: "Search resources in MDBList.",
 }
 
 var searchMediaCmd = &cobra.Command{
 	Use:   "media <media-type>",
-	Short: "Search for media",
+	Short: "Search for movie, show or both (any).",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		mediaType := args[0]
 		query, _ := cmd.Flags().GetString("query")
 
 		if query == "" {
-			fmt.Println("Error: --query flag is required")
+			fmt.Println("Error: --query flag is required!")
 			return
 		}
 
@@ -40,11 +40,11 @@ var searchMediaCmd = &cobra.Command{
 
 var searchListsCmd = &cobra.Command{
 	Use:   "lists",
-	Short: "Search for public lists",
+	Short: "Search public lists by title.",
 	Run: func(cmd *cobra.Command, args []string) {
 		query, _ := cmd.Flags().GetString("query")
 		if query == "" {
-			fmt.Println("Error: --query flag is required")
+			fmt.Println("Error: --query flag is required!")
 			return
 		}
 
