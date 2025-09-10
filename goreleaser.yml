@@ -50,7 +50,7 @@ archives:
 release:
   prerelease: auto
   footer: |
-    **Full Changelog**: https://github.com/mdblist-cli/mdblist-cli/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/luckylittle/mdblist-cli/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 checksum:
   name_template: "{{ .ProjectName }}_{{ .Version }}_checksums.txt"
